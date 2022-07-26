@@ -11,81 +11,53 @@
 #include <QFrame>
 #include <QSpacerItem>
 #include <QMessageBox>
-#include <widgets/customButton.h>
-#include <widgets/historywidget.h>
+#include <QEvent>
+#include <QShortcut>
+#include <widgets/buttons/customButton.h>
+#include <widgets/panels/historywidget.h>
+#include <widgets/windows/customwindow.h>
+#include <widgets/panels/calculatorwidget.h>
+#include <widgets/buttons/menubutton.h>
 #include <libs/muParser.h>
 
-class MainWindow : public QMainWindow
+class MainWindow : public CustomWindow
 {
     Q_OBJECT
 
-    mu::Parser p;
+    QVBoxLayout* mainLayout;
 
-    int cnt = 0;
+    QWidget* panelsWidget;
+    QHBoxLayout* panelsLayout;
 
-    QString expression;
+    QVBoxLayout* layout1;
+    QVBoxLayout* layout2;
 
-    QHBoxLayout* mainLayout;
+    CalculatorWidget* calculator;
+    HistoryWidget* history;
 
-    QWidget* centralWidget;
+    MenuButton* calculatorBtn;
+    MenuButton* helpBtn;
 
-    QWidget* gridWidget;
-    QGridLayout* mainGrid;
-    QLineEdit* mainEdit;
+    QLabel* ifWindowIsEmptyLabel;
 
-    QWidget* historyWidgetWrapper;
-    QVBoxLayout* historyLayout;
-    HistoryWidget* historyWidget;
+    QLabel* copyrightLabel;
 
-    CustomButton* button_power;
-    CustomButton* button_sqrt;
-    CustomButton* button_exp;
-    CustomButton* button_abs;
-    CustomButton* button_asin;
-    CustomButton* button_sin;
-    CustomButton* button_sinh;
-    CustomButton* button_asinh;
-    CustomButton* button_acos;
-    CustomButton* button_cos;
-    CustomButton* button_cosh;
-    CustomButton* button_acosh;
-    CustomButton* button_atan;
-    CustomButton* button_tan;
-    CustomButton* button_tanh;
-    CustomButton* button_atanh;
-    CustomButton* button_sec;
-    CustomButton* button_csc;
-    CustomButton* button_log;
-    CustomButton* button_log10;
-    CustomButton* button_C;
-    CustomButton* button_AC;
-    CustomButton* button_brackets;
-    CustomButton* button_divide;
-    CustomButton* button_7;
-    CustomButton* button_8;
-    CustomButton* button_9;
-    CustomButton* button_multiply;
-    CustomButton* button_4;
-    CustomButton* button_5;
-    CustomButton* button_6;
-    CustomButton* button_minus;
-    CustomButton* button_1;
-    CustomButton* button_2;
-    CustomButton* button_3;
-    CustomButton* button_plus;
-    CustomButton* button_0;
-    CustomButton* button_comma;
-    CustomButton* button_equal;
+    bool isHistoryPanelShowed;
+    bool isCalculatorPanelShowed;
+
+    int cnt;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void initMenu();
+
+    void isWindowIsEmpty();
+
 private slots:
-    void addNumber();
-    void addOperation();
-    void addFunction();
-    void addBracket();
-    void solve();
+    void showHistoryPanel();
+    void showCalculator();
+
 };
 #endif // MAINWINDOW_H

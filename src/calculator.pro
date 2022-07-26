@@ -21,8 +21,15 @@ SOURCES += \
     libs/muParserTokenReader.cpp \
     main.cpp \
     mainwindow.cpp \
-    widgets/customButton.cpp \
-    widgets/historywidget.cpp
+    widgets/panels/abstractpanel.cpp \
+    widgets/panels/calculatorwidget.cpp \
+    widgets/buttons/customButton.cpp \
+    widgets/panels/historywidget.cpp \
+    widgets/menu/menu.cpp \
+    widgets/buttons/menubutton.cpp \
+    widgets/titleBars/titlebar.cpp \
+    widgets/titleBars/viewtitlebar.cpp \
+    widgets/windows/customwindow.cpp
 
 HEADERS += \
     libs/muParser.h \
@@ -40,10 +47,20 @@ HEADERS += \
     libs/muParserToken.h \
     libs/muParserTokenReader.h \
     mainwindow.h \
-    widgets/customButton.h \
-    widgets/historywidget.h
+    widgets/panels/abstractpanel.h \
+    widgets/panels/calculatorwidget.h \
+    widgets/buttons/customButton.h \
+    widgets/panels/historywidget.h \
+    widgets/menu/menu.h \
+    widgets/buttons/menubutton.h \
+    widgets/titleBars/titlebar.h \
+    widgets/titleBars/viewtitlebar.h \
+    widgets/windows/customwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

@@ -9,29 +9,17 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QSpacerItem>
+#include <widgets/panels/abstractpanel.h>
+#include <QGraphicsDropShadowEffect>
 
-class HistoryWidget : public QWidget
+class HistoryWidget : public AbstractPanel
 {
     Q_OBJECT
-
-    QVBoxLayout* mainLayout;
-
-    QWidget* titleBarWidget;
-    QHBoxLayout* titleBarLayout;
-
-    QLabel* titleName;
-    QSpacerItem* titleBarSpacer;
-    QPushButton* viewButton;
-    QPushButton* closeButton;
-
-    QWidget* mainWidget;
-
-
 public:
     explicit HistoryWidget(QWidget *parent = nullptr);
 
 signals:
-
+    void closed();
 };
 
 #endif // HISTORYWIDGET_H
