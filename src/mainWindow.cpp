@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : CustomWindow(parent)
@@ -11,12 +11,25 @@ MainWindow::MainWindow(QWidget *parent)
     tb->setWindowTitle("Calculator");
     initMenu();
 
+    setupUI();
+    setupConnections();
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::setupUI()
+{
     setMinimumSize(700, 600);
     resize(700, 600);
 
     QFont basicFont;
     basicFont.setPixelSize(16);
     basicFont.setFamily("Bahnschrift SemiLight SemiConde");
+    QFont biggerFont;
+    biggerFont.setPixelSize(24);
+    biggerFont.setFamily("Bahnschrift SemiLight SemiConde");
 
     mainLayout = new QVBoxLayout(privWidget);
 
@@ -31,14 +44,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ifWindowIsEmptyLabel = new QLabel(panelsWidget);
     ifWindowIsEmptyLabel->setAlignment(Qt::AlignCenter);
-    ifWindowIsEmptyLabel->setText("The window is empty, nothing to show!\nYou can add panels to the menu");
-    ifWindowIsEmptyLabel->setFont(basicFont);
+    ifWindowIsEmptyLabel->setText("The window is empty, nothing to show!\nYou can add panels in the menu");
+    ifWindowIsEmptyLabel->setFont(biggerFont);
     ifWindowIsEmptyLabel->setStyleSheet("color: #DF1A2E;");
     ifWindowIsEmptyLabel->hide();
 
-    calculator = new CalculatorWidget(panelsWidget);
-    history = new HistoryWidget(panelsWidget);
-    history->hide();
+    initPanels();
 
     layout1->addWidget(calculator);
     layout1->addWidget(ifWindowIsEmptyLabel);
@@ -50,25 +61,42 @@ MainWindow::MainWindow(QWidget *parent)
     copyrightLabel->setAlignment(Qt::AlignCenter);
     copyrightLabel->setText("©Sosnov Gennadiy, 2022");
 
-    mainLayout->addWidget(panelsWidget);
+    mainLayout->addWidget(panelsWidget, 1);
     mainLayout->addWidget(copyrightLabel);
+}
 
-    connect(calculator, &CalculatorWidget::closed, this, [this](){
+void MainWindow::setupConnections()
+{
+    connect(calculator, &CalculatorPanelSection::closed, this, [this](){
         calculator->close();
         isCalculatorPanelShowed = false;
         cnt--;
         isWindowIsEmpty();
     });
-    connect(history, &HistoryWidget::closed, this, [this](){
+    connect(history, &HistoryPanelSection::closed, this, [this](){
         history->close();
         isHistoryPanelShowed = false;
         cnt--;
         isWindowIsEmpty();
     });
-}
 
-MainWindow::~MainWindow()
-{
+    connect(calculator, &CalculatorPanelSection::viewed, this, [this](){
+        cnt--;
+        isWindowIsEmpty();
+    });
+    connect(history, &HistoryPanelSection::viewed, this, [this](){
+        cnt--;
+        isWindowIsEmpty();
+    });
+
+    connect(calculator, &CalculatorPanelSection::windowHided, this, [this](){
+        cnt++;
+        isWindowIsEmpty();
+    });
+    connect(history, &HistoryPanelSection::windowHided, this, [this](){
+        cnt++;
+        isWindowIsEmpty();
+    });
 }
 
 void MainWindow::initMenu()
@@ -147,6 +175,13 @@ void MainWindow::initMenu()
     tb->addMenuButton(helpBtn);
 }
 
+void MainWindow::initPanels()
+{
+    calculator = new CalculatorPanelSection(panelsWidget);
+    history = new HistoryPanelSection(panelsWidget);
+    history->hide();
+}
+
 void MainWindow::showHistoryPanel()
 {
     if (!isHistoryPanelShowed)
@@ -155,6 +190,7 @@ void MainWindow::showHistoryPanel()
         cnt++;
     }
     isHistoryPanelShowed = true;
+    isWindowIsEmpty();
 }
 
 void MainWindow::showCalculator()
@@ -165,6 +201,7 @@ void MainWindow::showCalculator()
         cnt++;
     }
     isCalculatorPanelShowed = true;
+    isWindowIsEmpty();
 }
 
 void MainWindow::isWindowIsEmpty()

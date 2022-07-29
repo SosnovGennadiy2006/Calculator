@@ -1,19 +1,21 @@
-#include "calculatorwidget.h"
+#include "calculatorWidget.h"
 
-CalculatorWidget::CalculatorWidget(QWidget *parent)
-    : AbstractPanel{parent}
+CalculatorWidget::CalculatorWidget(QWidget* parent) :
+    AbstractPanelWidget{parent}
 {
-    tb->setWindowIcon(QIcon(":/icons/calculator.png"));
-    tb->setWindowTitle("Engineering calculator");
+    setupUI();
+    setupConections();
+}
+
+void CalculatorWidget::setupUI()
+{
+    setMaximumSize(1000, 700);
 
     QFont basicFont;
     basicFont.setPixelSize(42);
     basicFont.setFamily("Bahnschrift SemiLight SemiConde");
 
-    gridWidget = new QWidget(mainWidget);
-    widgetLayout->addWidget(gridWidget);
-
-    mainGrid = new QGridLayout(gridWidget);
+    mainGrid = new QGridLayout(this);
     mainGrid->setSpacing(5);
 
     mainEdit = new QLineEdit(this);
@@ -76,7 +78,7 @@ CalculatorWidget::CalculatorWidget(QWidget *parent)
     button_brackets = new CustomButton(this);
     button_brackets->setText("()");
     button_divide = new CustomButton(this);
-    button_divide->setText("/");;
+    button_divide->setText("/");
     button_7 = new CustomButton(this);
     button_7->setText("7");
     button_8 = new CustomButton(this);
@@ -148,7 +150,10 @@ CalculatorWidget::CalculatorWidget(QWidget *parent)
     mainGrid->addWidget(button_0, 5, 4, 1, 2);
     mainGrid->addWidget(button_comma, 5, 6);
     mainGrid->addWidget(button_equal, 5, 7);
+}
 
+void CalculatorWidget::setupConections()
+{
     connect(button_power, &QPushButton::clicked, this, &CalculatorWidget::addOperation);
     connect(button_divide, &QPushButton::clicked, this, &CalculatorWidget::addOperation);
     connect(button_multiply, &QPushButton::clicked, this, &CalculatorWidget::addOperation);
@@ -194,8 +199,6 @@ CalculatorWidget::CalculatorWidget(QWidget *parent)
     connect(button_C, &QPushButton::clicked, this, [this](){
         mainEdit->setText("");
     });
-
-    connect(tb, &ViewTitleBar::closeRequest, this, [this](){ emit closed(); });
 }
 
 void CalculatorWidget::addNumber()

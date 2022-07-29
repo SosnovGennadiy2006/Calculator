@@ -1,4 +1,4 @@
-#include "customwindow.h"
+#include "customWindow.h"
 
 CustomWindow::CustomWindow(QWidget *parent)
     : QWidget(parent), RESIZE_THRESHOLD(8), CLIENT_MARGIN(8)
@@ -24,7 +24,7 @@ CustomWindow::CustomWindow(QWidget *parent)
     this->privHW->setGraphicsEffect(effect);
 
     this->privWidget = new QWidget(this);
-    this->privWidget->setStyleSheet("background: #fff;");
+    this->privWidget->setStyleSheet("QWidget{background: #fff;}");
     this->privHWLayout = new QVBoxLayout(this);
 
     connect(this->privHW, &QHoverWatcher::entered, this, [this]{
@@ -45,7 +45,7 @@ CustomWindow::CustomWindow(QWidget *parent)
 
     this->privHWLayout->addWidget(this->privHW);
     tb = new QCustomTitleBar(this);
-    tb->setWindowTitle("custom title bar window");
+    tb->setWindowTitle("custom title bar");
     connectTitleBar();
     this->privHW->setLayout(this->privLayout);
     this->setLayout(this->privHWLayout);
@@ -56,7 +56,10 @@ CustomWindow::~CustomWindow()
 }
 
 void CustomWindow::connectTitleBar(){
-    connect(tb, &QCustomTitleBar::closeRequest, this, &CustomWindow::close);
+    connect(tb, &QCustomTitleBar::closeRequest, this, [this](){
+        emit closed();
+        this->close();
+    });
     connect(tb, &QCustomTitleBar::maximizeRequest, this, [this]{
         if (this->isMaximized())
         {
@@ -182,6 +185,14 @@ void CustomWindow::customMouseMoveEvent(QMouseEvent *event){
     if (this->mLock & Qt::LeftEdge && (cRH || gX < tL.x())) tL.rx() = gX;
     if (this->mLock & Qt::RightEdge && (cRH || gX > bR.x())) bR.rx() = gX;
     this->setGeometry(QRect(tL, bR));
+}
+
+void CustomWindow::setTitleBar(QCustomTitleBar *_tb)
+{
+    tb = _tb;
+    tb->setParent(this);
+
+    connectTitleBar();
 }
 
 void CustomWindow::redefineCursor(const QPoint &pos){

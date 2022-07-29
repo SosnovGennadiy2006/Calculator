@@ -13,12 +13,11 @@
 #include <QMessageBox>
 #include <QEvent>
 #include <QShortcut>
-#include <widgets/buttons/customButton.h>
-#include <widgets/panels/historywidget.h>
-#include <widgets/windows/customwindow.h>
-#include <widgets/panels/calculatorwidget.h>
-#include <widgets/buttons/menubutton.h>
-#include <libs/muParser.h>
+#include "widgets/windows/customWindow.h"
+#include "widgets/buttons/menuButton.h"
+#include "widgets/sections/calculatorPanelSection.h"
+#include "widgets/sections/historyPanelSection.h"
+#include "libs/muParser.h"
 
 class MainWindow : public CustomWindow
 {
@@ -32,8 +31,8 @@ class MainWindow : public CustomWindow
     QVBoxLayout* layout1;
     QVBoxLayout* layout2;
 
-    CalculatorWidget* calculator;
-    HistoryWidget* history;
+    CalculatorPanelSection* calculator;
+    HistoryPanelSection* history;
 
     MenuButton* calculatorBtn;
     MenuButton* helpBtn;
@@ -51,7 +50,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void setupUI();
+    void setupConnections();
+
     void initMenu();
+    void initPanels();
 
     void isWindowIsEmpty();
 

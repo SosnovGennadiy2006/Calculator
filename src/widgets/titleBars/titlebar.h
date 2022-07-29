@@ -18,7 +18,7 @@
 #include <QPaintEvent>
 #include <QPushButton>
 #include <QStyleOption>
-#include <widgets/menu/menu.h>
+#include "../../widgets/menu/menu.h"
 
 #ifndef EV_GLOBAL_MACRO
     #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

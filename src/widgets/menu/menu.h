@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QHBoxLayout>
-#include <widgets/buttons/menubutton.h>
+#include "../../widgets/buttons/menuButton.h"
 
 class Menu : public QWidget
 {

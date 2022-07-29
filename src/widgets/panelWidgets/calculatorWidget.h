@@ -1,27 +1,18 @@
 #ifndef CALCULATORWIDGET_H
 #define CALCULATORWIDGET_H
 
-#include <QObject>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
-#include <QLabel>
 #include <QLineEdit>
-#include <QSpacerItem>
-#include <widgets/buttons/customButton.h>
-#include <libs/muParser.h>
-#include <widgets/panels/abstractpanel.h>
+#include "../../widgets/buttons/customButton.h"
+#include "../../libs/muParser.h"
+#include "../../widgets/panelWidgets/abstractPanelWidget.h"
 
-class CalculatorWidget : public AbstractPanel
+class CalculatorWidget : public AbstractPanelWidget
 {
-    Q_OBJECT
-
     mu::Parser p;
 
     int cnt = 0;
 
-    QWidget* gridWidget;
     QGridLayout* mainGrid;
     QLineEdit* mainEdit;
 
@@ -64,11 +55,12 @@ class CalculatorWidget : public AbstractPanel
     CustomButton* button_0;
     CustomButton* button_comma;
     CustomButton* button_equal;
-public:
-    explicit CalculatorWidget(QWidget *parent = nullptr);
 
-signals:
-    void closed();
+public:
+    explicit CalculatorWidget(QWidget* parent = nullptr);
+
+    void setupUI() override;
+    void setupConections() override;
 
 private slots:
     void addNumber();
@@ -76,7 +68,6 @@ private slots:
     void addFunction();
     void addBracket();
     void solve();
-
 };
 
 #endif // CALCULATORWIDGET_H

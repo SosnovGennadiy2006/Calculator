@@ -1,5 +1,9 @@
-#ifndef CUSTOMWINDOW_H
-#define CUSTOMWINDOW_H
+//
+// Created by genas on 29.07.2022.
+//
+
+#ifndef SRC_HIDEWINDOW_H
+#define SRC_HIDEWINDOW_H
 
 #include <QMenu>
 #include <QRect>
@@ -28,39 +32,10 @@
 #include <QDir>
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
-#include "widgets/titleBars/titlebar.h"
+#include "../../widgets/titleBars/hideTitlebar.h"
+#include "../../widgets/QHoverWatcher.h"
 
-class QHoverWatcher: public QWidget{
-    Q_OBJECT
-
-public:
-    explicit QHoverWatcher(QWidget *parent = nullptr) : QWidget(parent) { this->installEventFilter(this); }
-
-protected:
-    bool eventFilter(QObject *, QEvent *event) override {
-        switch (event->type()) {
-            case QEvent::Enter:
-            case QEvent::HoverEnter:
-                emit entered();
-                break;
-        default: break;
-        }
-        return false;
-    }
-
-    void paintEvent(QPaintEvent *event) override {
-        QStyleOption opt;
-        opt.initFrom(this);
-        QPainter p(this);
-        style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-        QWidget::paintEvent(event);
-    }
-
-signals:
-    void entered();
-};
-
-class CustomWindow : public QWidget
+class HideWindow : public QWidget
 {
     Q_OBJECT
 
@@ -75,8 +50,8 @@ public:
 
     Q_DECLARE_FLAGS(OperationTypes, OperationType)
 
-    CustomWindow(QWidget *parent = nullptr);
-    ~CustomWindow();
+    HideWindow(QWidget *parent = nullptr);
+    ~HideWindow();
 
     inline bool isMoving(){ return this->cOpStatus & (OperationType::CUSTOM_MOVE | OperationType::SYSTEM_MOVE); }
     inline bool isResizing(){ return this->cOpStatus & (OperationType::CUSTOM_RESIZE | OperationType::SYSTEM_RESIZE); }
@@ -91,7 +66,7 @@ public:
 
 protected:
     const int RESIZE_THRESHOLD, CLIENT_MARGIN;
-    QCustomTitleBar* tb;
+    HideTitleBar* tb;
     QWidget *privWidget;
 
     bool eventFilter(QObject *, QEvent *event) override;
@@ -101,6 +76,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
     virtual void customMouseMoveEvent(QMouseEvent* event);
+
+    void setTitleBar(HideTitleBar* _tb);
 
 private:
     bool forceCustomMove;
@@ -117,6 +94,11 @@ private:
     QPoint mPosCursor;
 
     void redefineCursor(const QPoint &pos);
+
+signals:
+    void closed();
+    void hided();
 };
 
-#endif // CUSTOMWINDOW_H
+
+#endif //SRC_HIDEWINDOW_H
