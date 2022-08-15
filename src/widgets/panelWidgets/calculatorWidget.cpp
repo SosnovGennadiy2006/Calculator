@@ -4,32 +4,27 @@ CalculatorWidget::CalculatorWidget(QWidget* parent) :
     AbstractPanelWidget{parent}
 {
     setupUI();
-    setupConections();
+    setupConnections();
 }
 
 void CalculatorWidget::setupUI()
 {
     setMaximumSize(1000, 700);
 
-    QFont basicFont;
-    basicFont.setPixelSize(42);
-    basicFont.setFamily("Bahnschrift SemiLight SemiConde");
-
     mainGrid = new QGridLayout(this);
     mainGrid->setSpacing(5);
 
-    mainEdit = new QLineEdit(this);
-    mainEdit->setFont(basicFont);
-    mainEdit->setAlignment(Qt::AlignmentFlag::AlignRight);
-    mainEdit->setPlaceholderText("0");
-    mainEdit->setStyleSheet("QLineEdit{"
-                            "   border: 1px solid #555;"
-                            "   border-radius: 5px;"
-                            "   padding: 0px 0px -11px 0px;"
-                            "}"
-                            "QLineEdit:focus{"
-                            "   border: 1px solid #2154B9;"
-                            "}");
+    mainEdit = new CustomLineEdit(this);
+    QStringList wordList;
+    wordList << "sqrt(" << "exp(" << "abs(" << "asin(" << "sin(" << "sinh(" \
+        << "asinh(" << "acos(" << "cos(" << "cosh(" << "acosh(" << "atan(" \
+        << "tan(" << "tanh(" << "atanh(" << "sec(" << "csc(" << "log(" << "log10(";
+
+    QCompleter* completer = new QCompleter(wordList, this);
+    completer->setCaseSensitivity(Qt::CaseSensitive);
+    completer->setCompletionMode(QCompleter::InlineCompletion);
+
+    mainEdit->setCompleter(completer);
 
     button_power = new CustomButton(this);
     button_power->setText("^");
@@ -69,12 +64,27 @@ void CalculatorWidget::setupUI()
     button_csc->setText("csc");
     button_log = new CustomButton(this);
     button_log->setText("log");
-    button_log10 = new CustomButton(this);
-    button_log10->setText("log10");
+    button_ln = new CustomButton(this);
+    button_ln->setText("ln");
     button_C = new CustomButton(this);
     button_C->setText("C");
-    button_AC = new CustomButton(this);
-    button_AC->setText("AC");
+    button_backspace = new CustomButton(this);
+    button_backspace->setIcon(QIcon(":/icons/backspace.png"));
+    button_MC = new CustomButton(this);
+    button_MC->setText("MC");
+    button_MC->setWhatsThis("Memory clear");
+    button_MR = new CustomButton(this);
+    button_MR->setText("MR");
+    button_MR->setWhatsThis("Memory restore");
+    button_MS = new CustomButton(this);
+    button_MS->setText("MS");
+    button_MS->setWhatsThis("Memory store");
+    button_M_minus = new CustomButton(this);
+    button_M_minus->setText("M-");
+    button_M_minus->setWhatsThis("Memory minus");
+    button_M_plus = new CustomButton(this);
+    button_M_plus->setText("M+");
+    button_M_plus->setWhatsThis("Memory plus");
     button_brackets = new CustomButton(this);
     button_brackets->setText("()");
     button_divide = new CustomButton(this);
@@ -110,49 +120,54 @@ void CalculatorWidget::setupUI()
     button_equal = new CustomButton(this);
     button_equal->setText("=");
 
-    mainGrid->addWidget(mainEdit, 0, 0, 1, 8);
+    mainGrid->addWidget(mainEdit, 0, 0, 1, 9);
     mainGrid->addWidget(button_power, 1, 0);
     mainGrid->addWidget(button_sqrt, 1, 1);
     mainGrid->addWidget(button_exp, 1, 2);
     mainGrid->addWidget(button_abs, 1, 3);
-    mainGrid->addWidget(button_C, 1, 4);
-    mainGrid->addWidget(button_AC, 1, 5);
-    mainGrid->addWidget(button_brackets, 1, 6);
-    mainGrid->addWidget(button_divide, 1, 7);
+    mainGrid->addWidget(button_MC, 1, 4);
+    mainGrid->addWidget(button_backspace, 1, 5);
+    mainGrid->addWidget(button_C, 1, 6);
+    mainGrid->addWidget(button_brackets, 1, 7);
+    mainGrid->addWidget(button_divide, 1, 8);
     mainGrid->addWidget(button_asin, 2, 0);
     mainGrid->addWidget(button_sin, 2, 1);
     mainGrid->addWidget(button_sinh, 2, 2);
     mainGrid->addWidget(button_asinh, 2, 3);
-    mainGrid->addWidget(button_7, 2, 4);
-    mainGrid->addWidget(button_8, 2, 5);
-    mainGrid->addWidget(button_9, 2, 6);
-    mainGrid->addWidget(button_multiply, 2, 7);
+    mainGrid->addWidget(button_MS, 2, 4);
+    mainGrid->addWidget(button_7, 2, 5);
+    mainGrid->addWidget(button_8, 2, 6);
+    mainGrid->addWidget(button_9, 2, 7);
+    mainGrid->addWidget(button_multiply, 2, 8);
     mainGrid->addWidget(button_acos, 3, 0);
     mainGrid->addWidget(button_cos, 3, 1);
     mainGrid->addWidget(button_cosh, 3, 2);
     mainGrid->addWidget(button_acosh, 3, 3);
-    mainGrid->addWidget(button_4, 3, 4);
-    mainGrid->addWidget(button_5, 3, 5);
-    mainGrid->addWidget(button_6, 3, 6);
-    mainGrid->addWidget(button_minus, 3, 7);
+    mainGrid->addWidget(button_MR, 3, 4);
+    mainGrid->addWidget(button_4, 3, 5);
+    mainGrid->addWidget(button_5, 3, 6);
+    mainGrid->addWidget(button_6, 3, 7);
+    mainGrid->addWidget(button_minus, 3, 8);
     mainGrid->addWidget(button_atan, 4, 0);
     mainGrid->addWidget(button_tan, 4, 1);
     mainGrid->addWidget(button_tanh, 4, 2);
     mainGrid->addWidget(button_atanh, 4, 3);
-    mainGrid->addWidget(button_1, 4, 4);
-    mainGrid->addWidget(button_2, 4, 5);
-    mainGrid->addWidget(button_3, 4, 6);
-    mainGrid->addWidget(button_plus, 4, 7);
+    mainGrid->addWidget(button_M_plus, 4, 4);
+    mainGrid->addWidget(button_1, 4, 5);
+    mainGrid->addWidget(button_2, 4, 6);
+    mainGrid->addWidget(button_3, 4, 7);
+    mainGrid->addWidget(button_plus, 4, 8);
     mainGrid->addWidget(button_sec, 5, 0);
     mainGrid->addWidget(button_csc, 5, 1);
     mainGrid->addWidget(button_log, 5, 2);
-    mainGrid->addWidget(button_log10, 5, 3);
-    mainGrid->addWidget(button_0, 5, 4, 1, 2);
-    mainGrid->addWidget(button_comma, 5, 6);
-    mainGrid->addWidget(button_equal, 5, 7);
+    mainGrid->addWidget(button_ln, 5, 3);
+    mainGrid->addWidget(button_M_minus, 5, 4);
+    mainGrid->addWidget(button_0, 5, 5, 1, 2);
+    mainGrid->addWidget(button_comma, 5, 7);
+    mainGrid->addWidget(button_equal, 5, 8);
 }
 
-void CalculatorWidget::setupConections()
+void CalculatorWidget::setupConnections()
 {
     connect(button_power, &QPushButton::clicked, this, &CalculatorWidget::addOperation);
     connect(button_divide, &QPushButton::clicked, this, &CalculatorWidget::addOperation);
@@ -192,29 +207,81 @@ void CalculatorWidget::setupConections()
     connect(button_sec, &QPushButton::clicked, this, &CalculatorWidget::addFunction);
     connect(button_csc, &QPushButton::clicked, this, &CalculatorWidget::addFunction);
     connect(button_log, &QPushButton::clicked, this, &CalculatorWidget::addFunction);
-    connect(button_log10, &QPushButton::clicked, this, &CalculatorWidget::addFunction);
+    connect(button_ln, &QPushButton::clicked, this, &CalculatorWidget::addFunction);
 
     connect(button_equal, &QPushButton::clicked, this, &CalculatorWidget::solve);
 
     connect(button_C, &QPushButton::clicked, this, [this](){
         mainEdit->setText("");
     });
+
+    connect(button_backspace, &QPushButton::clicked, this, [this](){
+        if (mainEdit->text().isEmpty())
+            mainEdit->setText(mainEdit->text().chopped(1));
+    });
+
+    connect(button_MC, &QPushButton::clicked, this, [this](){
+        emit memoryClearBtnClicked();
+    });
+    connect(button_MS, &QPushButton::clicked, this, [this](){
+        emit memoryStoreBtnClicked();
+    });
+    connect(button_MR, &QPushButton::clicked, this, [this](){
+        emit memoryRestoreBtnClicked();
+    });
+    connect(button_M_plus, &QPushButton::clicked, this, [this](){
+        emit memoryPlusBtnClicked();
+    });
+    connect(button_M_minus, &QPushButton::clicked, this, [this](){
+        emit memoryMinusBtnClicked();
+    });
+}
+
+QString CalculatorWidget::getLineEditText() const
+{
+    return mainEdit->text();
+}
+
+void CalculatorWidget::setLineEditText(const QString& newText)
+{
+    mainEdit->setText(newText);
+}
+
+QString CalculatorWidget::count(const QString& text)
+{
+    try
+    {
+        p.SetExpr(text.toStdWString());
+        mu::value_type result = p.Eval();
+        return QString::number(result);
+    }
+    catch(mu::Parser::exception_type &e)
+    {
+        return "ERROR!";
+    }
 }
 
 void CalculatorWidget::addNumber()
 {
-    mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text());
+    if (mainEdit->text().isEmpty() || mainEdit->text().back() != ')')
+        mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text());
 }
 
 void CalculatorWidget::addOperation()
 {
-    mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text()[0]);
+    if (mainEdit->text().isEmpty())
+        return;
+    if (mainEdit->text().back().isDigit() || mainEdit->text().back() == ')')
+        mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text()[0]);
 }
 
 void CalculatorWidget::addFunction()
 {
-    mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text() + "(");
-    cnt++;
+    if (mainEdit->text().isEmpty() || !mainEdit->text().back().isDigit() || mainEdit->text().back() != ')')
+    {
+        mainEdit->setText(mainEdit->text() + (qobject_cast<QPushButton*>(sender()))->text() + "(");
+        cnt++;
+    }
 }
 
 void CalculatorWidget::addBracket()
@@ -225,20 +292,66 @@ void CalculatorWidget::addBracket()
         cnt--;
         return;
     }
-    mainEdit->setText(mainEdit->text() + "(");
-    cnt++;
+    if (!mainEdit->text().back().isDigit()) {
+        mainEdit->setText(mainEdit->text() + "(");
+        cnt++;
+    }
 }
 
 void CalculatorWidget::solve()
 {
-    try
-    {
-        p.SetExpr(mainEdit->text().toStdWString());
-        mu::value_type result = p.Eval();
-        mainEdit->setText(QString::number(result));
-    }
-    catch(mu::Parser::exception_type &e)
-    {
-        mainEdit->setText("ERROR!");
-    }
+    mainEdit->setText(count(mainEdit->text()));
+}
+
+void CalculatorWidget::showExtraButtons()
+{
+    button_power->show();
+    button_sqrt->show();
+    button_exp->show();
+    button_abs->show();
+    button_asin->show();
+    button_sin->show();
+    button_sinh->show();
+    button_asinh->show();
+    button_acos->show();
+    button_cos->show();
+    button_cosh->show();
+    button_acosh->show();
+    button_atan->show();
+    button_tan->show();
+    button_tanh->show();
+    button_atanh->show();
+    button_sec->show();
+    button_csc->show();
+    button_log->show();
+    button_ln->show();
+}
+
+void CalculatorWidget::closeExtraButtons()
+{
+    button_power->hide();
+    button_sqrt->hide();
+    button_exp->hide();
+    button_abs->hide();
+    button_asin->hide();
+    button_sin->hide();
+    button_sinh->hide();
+    button_asinh->hide();
+    button_acos->hide();
+    button_cos->hide();
+    button_cosh->hide();
+    button_acosh->hide();
+    button_atan->hide();
+    button_tan->hide();
+    button_tanh->hide();
+    button_atanh->hide();
+    button_sec->hide();
+    button_csc->hide();
+    button_log->hide();
+    button_ln->hide();
+}
+
+void CalculatorWidget::memoryRestore(const QString& text)
+{
+    mainEdit->setText(mainEdit->text() + text);
 }

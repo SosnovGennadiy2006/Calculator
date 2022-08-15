@@ -33,9 +33,9 @@ main.cpp
 widgets/buttons/customButton.cpp
 widgets/menu/menu.cpp
         widgets/buttons/menuButton.cpp
-        widgets/sections/abstractPanelSection.cpp
-        widgets/sections/calculatorPanelSection.cpp
-        widgets/sections/historyPanelSection.cpp
+        widgets/sections/abstractSection.cpp
+        widgets/sections/calculatorSection.cpp
+        widgets/sections/historySection.cpp
         widgets/titleBars/hideTitlebar.cpp
 widgets/titleBars/titlebar.cpp
         widgets/titleBars/viewTitlebar.cpp
@@ -65,16 +65,21 @@ widgets/buttons/customButton.h
 widgets/menu/menu.h
         widgets/buttons/menuButton.h
         widgets/QHoverWatcher.h
-        widgets/sections/abstractPanelSection.h
-        widgets/sections/calculatorPanelSection.h
-        widgets/sections/historyPanelSection.h
+        widgets/sections/abstractSection.h
+        widgets/sections/calculatorSection.h
+        widgets/sections/historySection.h
         widgets/titleBars/hideTitlebar.h
 widgets/titleBars/titlebar.h
         widgets/titleBars/viewTitlebar.h
         widgets/windows/customWindow.h
         widgets/windows/panelWindows/abstractPanelWindow.h
         widgets/windows/panelWindows/calculatorWindow.h
-        widgets/windows/panelWindows/historyWindow.h widgets/windows/hideWindow.cpp widgets/windows/hideWindow.h widgets/panelWidgets/programmerCalculatorWidget.cpp widgets/panelWidgets/programmerCalculatorWidget.h)
+        widgets/windows/panelWindows/historyWindow.h widgets/windows/hideWindow.cpp widgets/windows/hideWindow.h
+        widgets/panelWidgets/programmerCalculatorWidget.cpp widgets/panelWidgets/programmerCalculatorWidget.h
+        widgets/windows/panelWindows/programmerCalculatorWindow.cpp widgets/windows/panelWindows/programmerCalculatorWindow.h
+        widgets/sections/programmerCalculatorSection.cpp widgets/sections/programmerCalculatorSection.h
+        widgets/lineEdits/customLineEdit.cpp widgets/lineEdits/customLineEdit.h widgets/lineEdits/selectedLineEdit.cpp
+        widgets/lineEdits/selectedLineEdit.h widgets/comboBoxes/customComboBox.cpp widgets/comboBoxes/customComboBox.h widgets/panelWidgets/historyItem.cpp widgets/panelWidgets/historyItem.h widgets/customSpinBoxes/CustomDoubleSpinBox.cpp widgets/customSpinBoxes/CustomDoubleSpinBox.h)
 target_link_libraries(src
         Qt::Core
         Qt::Gui

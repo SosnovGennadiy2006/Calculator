@@ -5,22 +5,15 @@
         <file>icons/history.png</file>
         <file>icons/exit.png</file>
         <file>icons/help.png</file>
-        <file>icons/converterIcons/angle.png</file>
-        <file>icons/converterIcons/area.png</file>
-        <file>icons/converterIcons/currency.png</file>
-        <file>icons/converterIcons/data.png</file>
-        <file>icons/converterIcons/energy.png</file>
-        <file>icons/converterIcons/length.png</file>
-        <file>icons/converterIcons/power.png</file>
-        <file>icons/converterIcons/pressure.png</file>
-        <file>icons/converterIcons/speed.png</file>
-        <file>icons/converterIcons/temperature.png</file>
-        <file>icons/converterIcons/time.png</file>
-        <file>icons/converterIcons/volume.png</file>
-        <file>icons/converterIcons/weight.png</file>
         <file>icons/about.png</file>
         <file>icons/programmerCalculator.png</file>
         <file>icons/hide.png</file>
         <file>icons/calculator.png</file>
+        <file>icons/backspace.png</file>
+        <file>icons/expand.png</file>
+        <file>icons/edit.png</file>
+        <file>icons/save.png</file>
+        <file>icons/arrow-up.png</file>
+        <file>icons/arrow-down.png</file>
     </qresource>
 </RCC>

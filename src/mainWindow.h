@@ -15,8 +15,9 @@
 #include <QShortcut>
 #include "widgets/windows/customWindow.h"
 #include "widgets/buttons/menuButton.h"
-#include "widgets/sections/calculatorPanelSection.h"
-#include "widgets/sections/historyPanelSection.h"
+#include "widgets/sections/calculatorSection.h"
+#include "widgets/sections/historySection.h"
+#include "widgets/sections/programmerCalculatorSection.h"
 #include "libs/muParser.h"
 
 class MainWindow : public CustomWindow
@@ -31,8 +32,9 @@ class MainWindow : public CustomWindow
     QVBoxLayout* layout1;
     QVBoxLayout* layout2;
 
-    CalculatorPanelSection* calculator;
-    HistoryPanelSection* history;
+    CalculatorSection* calculator;
+    HistorySection* history;
+    ProgrammerCalculatorSection* programmerCalculator;
 
     MenuButton* calculatorBtn;
     MenuButton* helpBtn;
@@ -41,13 +43,14 @@ class MainWindow : public CustomWindow
 
     QLabel* copyrightLabel;
 
-    bool isHistoryPanelShowed;
-    bool isCalculatorPanelShowed;
+    bool isHistoryShowed;
+    bool isCalculatorShowed;
+    bool isProgrammerCalculatorShowed;
 
     int cnt;
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     void setupUI();
@@ -59,8 +62,9 @@ public:
     void isWindowIsEmpty();
 
 private slots:
-    void showHistoryPanel();
+    void showHistory();
     void showCalculator();
+    void showProgrammerCalculator();
 
 };
 #endif // MAINWINDOW_H

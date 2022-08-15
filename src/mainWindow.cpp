@@ -4,8 +4,9 @@ MainWindow::MainWindow(QWidget *parent)
     : CustomWindow(parent)
 {
     cnt = 1;
-    isHistoryPanelShowed = false;
-    isCalculatorPanelShowed = false;
+    isHistoryShowed = false;
+    isCalculatorShowed = true;
+    isProgrammerCalculatorShowed = false;
 
     tb->setWindowIcon(QPixmap(":/icons/favicon.png"));
     tb->setWindowTitle("Calculator");
@@ -21,8 +22,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUI()
 {
-    setMinimumSize(700, 600);
-    resize(700, 600);
+    setMinimumSize(1075, 875);
+    resize(1075, 875);
 
     QFont basicFont;
     basicFont.setPixelSize(16);
@@ -52,6 +53,7 @@ void MainWindow::setupUI()
     initPanels();
 
     layout1->addWidget(calculator);
+    layout1->addWidget(programmerCalculator);
     layout1->addWidget(ifWindowIsEmptyLabel);
 
     layout2->addWidget(history);
@@ -67,35 +69,57 @@ void MainWindow::setupUI()
 
 void MainWindow::setupConnections()
 {
-    connect(calculator, &CalculatorPanelSection::closed, this, [this](){
+    connect(calculator, &CalculatorSection::closed, this, [this](){
         calculator->close();
-        isCalculatorPanelShowed = false;
+        isCalculatorShowed = false;
         cnt--;
         isWindowIsEmpty();
     });
-    connect(history, &HistoryPanelSection::closed, this, [this](){
+    connect(history, &HistorySection::closed, this, [this](){
         history->close();
-        isHistoryPanelShowed = false;
+        isHistoryShowed = false;
+        cnt--;
+        isWindowIsEmpty();
+    });
+    connect(programmerCalculator, &ProgrammerCalculatorSection::closed, this, [this](){
+        programmerCalculator->close();
+        isProgrammerCalculatorShowed = false;
         cnt--;
         isWindowIsEmpty();
     });
 
-    connect(calculator, &CalculatorPanelSection::viewed, this, [this](){
+    connect(calculator, &CalculatorSection::viewed, this, [this](){
         cnt--;
         isWindowIsEmpty();
     });
-    connect(history, &HistoryPanelSection::viewed, this, [this](){
+    connect(history, &HistorySection::viewed, this, [this](){
+        cnt--;
+        isWindowIsEmpty();
+    });
+    connect(programmerCalculator, &ProgrammerCalculatorSection::viewed, this, [this](){
         cnt--;
         isWindowIsEmpty();
     });
 
-    connect(calculator, &CalculatorPanelSection::windowHided, this, [this](){
+    connect(calculator, &CalculatorSection::windowHided, this, [this](){
         cnt++;
         isWindowIsEmpty();
     });
-    connect(history, &HistoryPanelSection::windowHided, this, [this](){
+    connect(history, &HistorySection::windowHided, this, [this](){
         cnt++;
         isWindowIsEmpty();
+    });
+    connect(programmerCalculator, &ProgrammerCalculatorSection::windowHided, this, [this](){
+        cnt++;
+        isWindowIsEmpty();
+    });
+
+    connect(calculator, &CalculatorSection::memoryClearBtnClicked, history, &HistorySection::clearMemory);
+    connect(calculator, &CalculatorSection::memoryPlusBtnClicked, history, &HistorySection::memoryPlus);
+    connect(calculator, &CalculatorSection::memoryMinusBtnClicked, history, &HistorySection::memoryMinus);
+    connect(calculator, &CalculatorSection::memoryStoreBtnClicked, history, &HistorySection::addNumber);
+    connect(calculator, &CalculatorSection::memoryRestoreBtnClicked, this, [this](){
+        calculator->restoreMemory(QString::number(history->getValue()));
     });
 }
 
@@ -115,41 +139,10 @@ void MainWindow::initMenu()
     closeAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
     QShortcut *closeShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q), this);
 
-    QMenu* convertersMenu = new QMenu(this);
-    convertersMenu->setTitle("Converters");
-
-    QAction* currencyAction = new QAction(QIcon(":/icons/converterIcons/currency.png"), "Currency", this);
-    QAction* volumeAction = new QAction(QIcon(":/icons/converterIcons/volume.png"), "Volume", this);
-    QAction* lengthAction = new QAction(QIcon(":/icons/converterIcons/length.png"), "Length", this);
-    QAction* weightAction = new QAction(QIcon(":/icons/converterIcons/weight.png"), "Weight", this);
-    QAction* temperatureAction = new QAction(QIcon(":/icons/converterIcons/temperature.png"), "Temperature", this);
-    QAction* energyAction = new QAction(QIcon(":/icons/converterIcons/energy.png"), "Energy", this);
-    QAction* areaAction = new QAction(QIcon(":/icons/converterIcons/area.png"), "Area", this);
-    QAction* speedAction = new QAction(QIcon(":/icons/converterIcons/speed.png"), "Speed", this);
-    QAction* timeAction = new QAction(QIcon(":/icons/converterIcons/time.png"), "Time", this);
-    QAction* powerAction = new QAction(QIcon(":/icons/converterIcons/power.png"), "Power", this);
-    QAction* dataAction = new QAction(QIcon(":/icons/converterIcons/data.png"), "Data", this);
-    QAction* pressureAction = new QAction(QIcon(":/icons/converterIcons/pressure.png"), "Pressure", this);
-    QAction* angleAction = new QAction(QIcon(":/icons/converterIcons/angle.png"), "Angle", this);
-
-    convertersMenu->addAction(currencyAction);
-    convertersMenu->addAction(volumeAction);
-    convertersMenu->addAction(lengthAction);
-    convertersMenu->addAction(weightAction);
-    convertersMenu->addAction(temperatureAction);
-    convertersMenu->addAction(energyAction);
-    convertersMenu->addAction(areaAction);
-    convertersMenu->addAction(speedAction);
-    convertersMenu->addAction(timeAction);
-    convertersMenu->addAction(powerAction);
-    convertersMenu->addAction(dataAction);
-    convertersMenu->addAction(pressureAction);
-    convertersMenu->addAction(angleAction);
-
     QObject::connect(closeShortcut, &QShortcut::activated,
                      this, &MainWindow::close);
     QObject::connect(historyShortcut, &QShortcut::activated,
-                     this, &MainWindow::showHistoryPanel);
+                     this, &MainWindow::showHistory);
 
     calculatorBtn = new MenuButton(this);
     calculatorBtn->setText("Calculator");
@@ -157,7 +150,6 @@ void MainWindow::initMenu()
     calculatorBtn->addSeparator();
     calculatorBtn->addAction(engineeringCalculatorAction);
     calculatorBtn->addAction(programmerCalculatorAction);
-    calculatorBtn->addMenu(convertersMenu);
     calculatorBtn->addSeparator();
     calculatorBtn->addAction(closeAction);
 
@@ -168,8 +160,9 @@ void MainWindow::initMenu()
     helpBtn->addAction(new QAction(QIcon(":/icons/about.png"), "About", this));
 
     connect(closeAction, &QAction::triggered, this, &MainWindow::close);
-    connect(historyAction, &QAction::triggered, this, &MainWindow::showHistoryPanel);
+    connect(historyAction, &QAction::triggered, this, &MainWindow::showHistory);
     connect(engineeringCalculatorAction, &QAction::triggered, this, &MainWindow::showCalculator);
+    connect(programmerCalculatorAction, &QAction::triggered, this, &MainWindow::showProgrammerCalculator);
 
     tb->addMenuButton(calculatorBtn);
     tb->addMenuButton(helpBtn);
@@ -177,30 +170,43 @@ void MainWindow::initMenu()
 
 void MainWindow::initPanels()
 {
-    calculator = new CalculatorPanelSection(panelsWidget);
-    history = new HistoryPanelSection(panelsWidget);
+    calculator = new CalculatorSection(panelsWidget);
+    history = new HistorySection(panelsWidget);
     history->hide();
+    programmerCalculator = new ProgrammerCalculatorSection(panelsWidget);
+    programmerCalculator->hide();
 }
 
-void MainWindow::showHistoryPanel()
+void MainWindow::showHistory()
 {
-    if (!isHistoryPanelShowed)
+    if (!isHistoryShowed)
     {
         history->show();
         cnt++;
     }
-    isHistoryPanelShowed = true;
+    isHistoryShowed = true;
     isWindowIsEmpty();
 }
 
 void MainWindow::showCalculator()
 {
-    if (!isCalculatorPanelShowed)
+    if (!isCalculatorShowed)
     {
         calculator->show();
         cnt++;
     }
-    isCalculatorPanelShowed = true;
+    isCalculatorShowed = true;
+    isWindowIsEmpty();
+}
+
+void MainWindow::showProgrammerCalculator()
+{
+    if (!isProgrammerCalculatorShowed)
+    {
+        programmerCalculator->show();
+        cnt++;
+    }
+    isProgrammerCalculatorShowed = true;
     isWindowIsEmpty();
 }
 

@@ -11,7 +11,7 @@ public:
     explicit AbstractPanelWidget(QWidget *parent = nullptr);
 
     virtual void setupUI() {};
-    virtual void setupConections() {};
+    virtual void setupConnections() {};
 
 signals:
 

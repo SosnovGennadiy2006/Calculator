@@ -8,7 +8,7 @@
 #include "../../widgets/titleBars/viewTitlebar.h"
 #include "../../widgets/panelWidgets/abstractPanelWidget.h"
 
-class AbstractPanelSection : public QWidget
+class AbstractSection : public QWidget
 {
     Q_OBJECT
 
@@ -18,7 +18,7 @@ class AbstractPanelSection : public QWidget
     QVBoxLayout* widgetLayout;
 
 public:
-    explicit AbstractPanelSection(AbstractPanelWidget* panelWidget, QWidget *parent = nullptr);
+    explicit AbstractSection(QWidget *parent = nullptr);
 
     void setPanelWidget(AbstractPanelWidget* _panelWidget);
 

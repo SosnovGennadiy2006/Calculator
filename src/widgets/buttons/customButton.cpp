@@ -9,13 +9,18 @@ CustomButton::CustomButton(QWidget* parent) : QPushButton{parent}
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setCursor(Qt::CursorShape::PointingHandCursor);
     setFont(basicFont);
-    setStyleSheet("CustomButton{"
-                  "    background: #2154B9;"
-                  "    color: #ffffff;"
-                  "    border: none;"
-                  "    border-radius: 5px;"
-                  "}"
-                  "CustomButton:hover{"
-                  "    background: #1D4AA2;"
+    setStyleSheet("CustomButton{\n"
+                  "    color: #ffffff;\n"
+                  "    border: none;\n"
+                  "    border-radius: 5px;\n"
+                  "}\n"
+                  "CustomButton:enabled{\n"
+                  "    background: #2154B9;\n"
+                  "}\n"
+                  "CustomButton:enabled:hover{\n"
+                  "    background: #1D4AA2;\n"
+                  "}\n"
+                  "CustomButton:disabled{\n"
+                  "    background: #AED6F1;\n"
                   "}");
 }

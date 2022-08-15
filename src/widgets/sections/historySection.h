@@ -1,25 +1,35 @@
 #ifndef HISTORYPANELSECTION_H
 #define HISTORYPANELSECTION_H
 
-#include "abstractPanelSection.h"
+#include "abstractSection.h"
 #include <QObject>
 #include <QWidget>
 #include "../../widgets/panelWidgets/historyWidget.h"
 #include "../../widgets/windows/panelWindows/historyWindow.h"
 
-class HistoryPanelSection : public AbstractPanelSection
+class HistorySection : public AbstractSection
 {
     Q_OBJECT
 
     HistoryWindow* window;
+    HistoryWidget* panelWidget;
 
 public:
-    explicit HistoryPanelSection(QWidget* parent = nullptr);
+    explicit HistorySection(QWidget* parent = nullptr);
+
+    [[nodiscard]] double getValue() const;
 
 protected slots:
     void viewWindow() override;
     void closeWindow() override;
     void hideWindow() override;
+
+public slots:
+    void clearMemory();
+    void memoryPlus(double number);
+    void memoryMinus(double number);
+
+    void addNumber(const QString& number);
 };
 
 #endif // HISTORYPANELSECTION_H

@@ -1,6 +1,6 @@
-#include "abstractPanelSection.h"
+#include "abstractSection.h"
 
-AbstractPanelSection::AbstractPanelSection(AbstractPanelWidget* _panelWidget, QWidget *parent)
+AbstractSection::AbstractSection(QWidget *parent)
     : QWidget{parent}
 {
     setMaximumSize(500, 500);
@@ -24,18 +24,16 @@ AbstractPanelSection::AbstractPanelSection(AbstractPanelWidget* _panelWidget, QW
 
     widgetLayout = new QVBoxLayout(mainWidget);
 
-    setPanelWidget(_panelWidget);
-
     mainLayout->addWidget(tb);
     mainLayout->addWidget(mainWidget, 1);
 
     connect(tb, &ViewTitleBar::closeRequest, this, [this](){
         emit closed();
     });
-    connect(tb, &ViewTitleBar::viewBtnClicked, this, &AbstractPanelSection::viewWindow);
+    connect(tb, &ViewTitleBar::viewBtnClicked, this, &AbstractSection::viewWindow);
 }
 
-void AbstractPanelSection::setPanelWidget(AbstractPanelWidget* _panelWidget)
+void AbstractSection::setPanelWidget(AbstractPanelWidget* _panelWidget)
 {
     panelWidget = _panelWidget;
     panelWidget->setParent(mainWidget);

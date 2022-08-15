@@ -6,15 +6,18 @@
 #include "../../widgets/buttons/customButton.h"
 #include "../../libs/muParser.h"
 #include "../../widgets/panelWidgets/abstractPanelWidget.h"
+#include "../../widgets/lineEdits/customLineEdit.h"
 
 class CalculatorWidget : public AbstractPanelWidget
 {
+    Q_OBJECT
+
     mu::Parser p;
 
     int cnt = 0;
 
     QGridLayout* mainGrid;
-    QLineEdit* mainEdit;
+    CustomLineEdit* mainEdit;
 
     CustomButton* button_power;
     CustomButton* button_sqrt;
@@ -35,9 +38,14 @@ class CalculatorWidget : public AbstractPanelWidget
     CustomButton* button_sec;
     CustomButton* button_csc;
     CustomButton* button_log;
-    CustomButton* button_log10;
+    CustomButton* button_ln;
     CustomButton* button_C;
-    CustomButton* button_AC;
+    CustomButton* button_backspace;
+    CustomButton* button_MC;
+    CustomButton* button_MR;
+    CustomButton* button_MS;
+    CustomButton* button_M_minus;
+    CustomButton* button_M_plus;
     CustomButton* button_brackets;
     CustomButton* button_divide;
     CustomButton* button_7;
@@ -60,7 +68,25 @@ public:
     explicit CalculatorWidget(QWidget* parent = nullptr);
 
     void setupUI() override;
-    void setupConections() override;
+    void setupConnections() override;
+
+    QString getLineEditText() const;
+    void setLineEditText(const QString& newText);
+
+    QString count(const QString& text);
+
+signals:
+    void memoryClearBtnClicked();
+    void memoryStoreBtnClicked();
+    void memoryRestoreBtnClicked();
+    void memoryPlusBtnClicked();
+    void memoryMinusBtnClicked();
+
+public slots:
+    void showExtraButtons();
+    void closeExtraButtons();
+
+    void memoryRestore(const QString& text);
 
 private slots:
     void addNumber();
@@ -68,6 +94,7 @@ private slots:
     void addFunction();
     void addBracket();
     void solve();
+
 };
 
 #endif // CALCULATORWIDGET_H
