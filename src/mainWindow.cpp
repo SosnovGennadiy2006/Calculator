@@ -114,6 +114,19 @@ void MainWindow::setupConnections()
         isWindowIsEmpty();
     });
 
+    connect(calculator, &CalculatorSection::windowClosed, this, [this](){
+        isCalculatorShowed = false;
+        isWindowIsEmpty();
+    });
+    connect(history, &HistorySection::windowClosed, this, [this](){
+        isHistoryShowed = false;
+        isWindowIsEmpty();
+    });
+    connect(programmerCalculator, &ProgrammerCalculatorSection::windowClosed, this, [this](){
+        isProgrammerCalculatorShowed = false;
+        isWindowIsEmpty();
+    });
+
     connect(calculator, &CalculatorSection::memoryClearBtnClicked, history, &HistorySection::clearMemory);
     connect(calculator, &CalculatorSection::memoryPlusBtnClicked, history, &HistorySection::memoryPlus);
     connect(calculator, &CalculatorSection::memoryMinusBtnClicked, history, &HistorySection::memoryMinus);
@@ -121,6 +134,11 @@ void MainWindow::setupConnections()
     connect(calculator, &CalculatorSection::memoryRestoreBtnClicked, this, [this](){
         calculator->restoreMemory(QString::number(history->getValue()));
     });
+
+    connect(programmerCalculator, &ProgrammerCalculatorSection::memoryRestoreBtnClicked, this, [this](){
+        programmerCalculator->restoreMemory(QString::number(history->getValue()));
+    });
+    connect(programmerCalculator, &ProgrammerCalculatorSection::memoryStoreBtnClicked, history, &HistorySection::addNumber);
 }
 
 void MainWindow::initMenu()
@@ -139,9 +157,9 @@ void MainWindow::initMenu()
     closeAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
     QShortcut *closeShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q), this);
 
-    QObject::connect(closeShortcut, &QShortcut::activated,
+    connect(closeShortcut, &QShortcut::activated,
                      this, &MainWindow::close);
-    QObject::connect(historyShortcut, &QShortcut::activated,
+    connect(historyShortcut, &QShortcut::activated,
                      this, &MainWindow::showHistory);
 
     calculatorBtn = new MenuButton(this);

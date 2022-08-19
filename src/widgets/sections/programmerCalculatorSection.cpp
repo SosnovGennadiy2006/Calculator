@@ -7,12 +7,21 @@
 ProgrammerCalculatorSection::ProgrammerCalculatorSection(QWidget *parent) :
         AbstractSection{parent}
 {
+    window = nullptr;
+
     panelWidget = new ProgrammerCalculatorWidget();
 
     setPanelWidget(panelWidget);
 
     tb->setWindowIcon(QIcon(":/icons/programmerCalculator.png"));
     tb->setWindowTitle("Programmer calculator");
+
+    connect(panelWidget, &ProgrammerCalculatorWidget::memoryRestoreBtnClicked, this, [this](){
+        emit memoryRestoreBtnClicked();
+    });
+    connect(panelWidget, &ProgrammerCalculatorWidget::memoryStoreBtnClicked, this, [this](){
+        emit memoryStoreBtnClicked(panelWidget->getSelectedLineEditText());
+    });
 }
 
 void ProgrammerCalculatorSection::viewWindow()
@@ -37,6 +46,13 @@ void ProgrammerCalculatorSection::viewWindow()
     connect(window, &ProgrammerCalculatorWindow::closed, this, &ProgrammerCalculatorSection::closeWindow);
     connect(window, &ProgrammerCalculatorWindow::hided, this, &ProgrammerCalculatorSection::hideWindow);
 
+    connect(window, &ProgrammerCalculatorWindow::memoryRestoreBtnClicked, this, [this](){
+        emit memoryRestoreBtnClicked();
+    });
+    connect(window, &ProgrammerCalculatorWindow::memoryStoreBtnClicked, this, [this](){
+        emit memoryStoreBtnClicked(window->getSelectedLineEditText());
+    });
+
     emit viewed();
 }
 
@@ -57,4 +73,13 @@ void ProgrammerCalculatorSection::hideWindow()
     window->close();
 
     emit windowHided();
+}
+
+void ProgrammerCalculatorSection::restoreMemory(const QString &text)
+{
+    if (window != nullptr)
+    {
+        window->memoryRestore(text);
+    }
+    panelWidget->memoryRestore(text);
 }

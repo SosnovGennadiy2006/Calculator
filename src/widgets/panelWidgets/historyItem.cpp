@@ -6,6 +6,7 @@
 
 HistoryItem::HistoryItem(QWidget* parent) : QWidget{parent}
 {
+    setMinimumHeight(60);
     setMaximumHeight(60);
 
     QFont basicFont;

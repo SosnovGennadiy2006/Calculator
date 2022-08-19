@@ -11,6 +11,8 @@ HistoryWidget::HistoryWidget(QWidget *parent)
 
 void HistoryWidget::setupUI()
 {
+    setMaximumSize(1000, 700);
+
     QFont basicFont;
     basicFont.setPixelSize(24);
     basicFont.setFamily("Bahnschrift SemiLight SemiConde");
@@ -23,17 +25,21 @@ void HistoryWidget::setupUI()
     isEmptyHistoryLabel->setFont(basicFont);
     isEmptyHistoryLabel->setStyleSheet("color: #DF1A2E;");
 
-    spacer = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    mainArea = new QScrollArea(this);
+    mainArea->setStyleSheet("QScrollArea{border:none;}");
+    mainArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    mainArea->setWidgetResizable(true);
 
     itemsWidget = new QWidget(this);
-    itemsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    itemsWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     itemsLayout = new QVBoxLayout(itemsWidget);
-    itemsLayout->addItem(spacer);
     itemsLayout->setSpacing(0);
     itemsLayout->setContentsMargins(0, 0, 0, 0);
 
-    mainLayout->addWidget(isEmptyHistoryLabel);
-    mainLayout->addWidget(itemsWidget);
+    mainArea->setWidget(itemsWidget);
+
+    mainLayout->addWidget(isEmptyHistoryLabel, 1);
+    mainLayout->addWidget(mainArea);
 }
 
 void HistoryWidget::setupConnections()
@@ -81,8 +87,6 @@ void HistoryWidget::addNumber(double number)
     isEmptyHistoryLabel->hide();
 
     connect(item, &HistoryItem::deleted, this, [this, item](){ deleteNumber(item);});
-
-    isEmptyHistoryLabel->hide();
 }
 
 void HistoryWidget::deleteNumber(HistoryItem *number_item)

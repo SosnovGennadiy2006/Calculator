@@ -34,8 +34,8 @@ protected slots:
 signals:
     void closed();
     void viewed();
-    void windowClosed();
     void windowHided();
+    void windowClosed();
 };
 
 #endif // ABSTRACTPANELSECTION_H

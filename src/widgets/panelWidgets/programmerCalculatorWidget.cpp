@@ -205,6 +205,9 @@ void ProgrammerCalculatorWidget::setupConnections()
     });
 
     connect(button_AC, &CustomButton::clicked, this, [this](){selectedLineEdit->setText("0");});
+
+    connect(button_MR, &CustomButton::clicked, this, [this](){emit memoryRestoreBtnClicked();});
+    connect(button_MS, &CustomButton::clicked, this, [this](){emit memoryStoreBtnClicked();});
 }
 
 void ProgrammerCalculatorWidget::hideKeyboard()
@@ -406,6 +409,69 @@ QString ProgrammerCalculatorWidget::getLineEditToText() const
     return lineEditTo->text();
 }
 
+QString ProgrammerCalculatorWidget::getSelectedLineEditText() const
+{
+    unsigned short int calculusSystemFrom = 0, calculusSystemTo = 0;
+
+    switch(comboBoxFrom->currentIndex())
+    {
+        case 0:
+        {
+            calculusSystemFrom = 2;
+            break;
+        }
+        case 1:
+        {
+            calculusSystemFrom = 8;
+            break;
+        }
+        case 2:
+        {
+            calculusSystemFrom = 10;
+            break;
+        }
+        case 3:
+        {
+            calculusSystemFrom = 16;
+            break;
+        }
+    }
+
+    switch(comboBoxTo->currentIndex())
+    {
+        case 0:
+        {
+            calculusSystemTo = 2;
+            break;
+        }
+        case 1:
+        {
+            calculusSystemTo = 8;
+            break;
+        }
+        case 2:
+        {
+            calculusSystemTo = 10;
+            break;
+        }
+        case 3:
+        {
+            calculusSystemTo = 16;
+            break;
+        }
+    }
+
+    bool ok;
+
+    if (selectedLineEdit == lineEditFrom)
+    {
+        return QString::number(lineEditFrom->text().toInt(&ok, calculusSystemFrom), 10);
+    }else
+    {
+        return QString::number(lineEditTo->text().toInt(&ok, calculusSystemTo), 10);
+    }
+}
+
 int ProgrammerCalculatorWidget::getComboBoxFromIndex() const
 {
     return comboBoxFrom->currentIndex();
@@ -414,6 +480,69 @@ int ProgrammerCalculatorWidget::getComboBoxFromIndex() const
 int ProgrammerCalculatorWidget::getComboBoxToIndex() const
 {
     return comboBoxTo->currentIndex();
+}
+
+void ProgrammerCalculatorWidget::memoryRestore(const QString& text)
+{
+    unsigned short int calculusSystemFrom = 0, calculusSystemTo = 0;
+
+    switch(comboBoxFrom->currentIndex())
+    {
+        case 0:
+        {
+            calculusSystemFrom = 2;
+            break;
+        }
+        case 1:
+        {
+            calculusSystemFrom = 8;
+            break;
+        }
+        case 2:
+        {
+            calculusSystemFrom = 10;
+            break;
+        }
+        case 3:
+        {
+            calculusSystemFrom = 16;
+            break;
+        }
+    }
+
+    switch(comboBoxTo->currentIndex())
+    {
+        case 0:
+        {
+            calculusSystemTo = 2;
+            break;
+        }
+        case 1:
+        {
+            calculusSystemTo = 8;
+            break;
+        }
+        case 2:
+        {
+            calculusSystemTo = 10;
+            break;
+        }
+        case 3:
+        {
+            calculusSystemTo = 16;
+            break;
+        }
+    }
+
+    if (selectedLineEdit == lineEditFrom)
+    {
+        lineEditFrom->setText(QString::number(text.toInt(), calculusSystemFrom));
+    }else
+    {
+        lineEditTo->setText(QString::number(text.toInt(), calculusSystemTo));
+    }
+
+    makeConversion();
 }
 
 void ProgrammerCalculatorWidget::textChanged(const QString& newText)

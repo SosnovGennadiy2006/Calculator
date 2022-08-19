@@ -36,8 +36,6 @@ void HistorySection::viewWindow()
 
 void HistorySection::closeWindow()
 {
-    panelWidget->setNumbers(window->getNumbers());
-
     emit windowClosed();
 }
 

@@ -106,8 +106,15 @@ public:
     [[nodiscard]] unsigned short int getSelectedLineEditNumber() const;
     [[nodiscard]] QString getLineEditFromText() const;
     [[nodiscard]] QString getLineEditToText() const;
+    [[nodiscard]] QString getSelectedLineEditText() const;
     [[nodiscard]] int getComboBoxFromIndex() const;
     [[nodiscard]] int getComboBoxToIndex() const;
+
+    void memoryRestore(const QString& text);
+
+signals:
+    void memoryRestoreBtnClicked();
+    void memoryStoreBtnClicked();
 
 private slots:
     void addZero();

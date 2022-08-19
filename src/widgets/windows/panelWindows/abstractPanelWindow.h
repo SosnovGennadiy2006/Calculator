@@ -13,6 +13,9 @@ class AbstractPanelWindow : public HideWindow
 
     QVBoxLayout* widgetLayout;
 
+    QWidget* panelLayoutWidget;
+    QHBoxLayout* panelLayout;
+
 protected:
     AbstractPanelWidget* panelWidget;
 

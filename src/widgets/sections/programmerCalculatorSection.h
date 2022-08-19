@@ -21,6 +21,12 @@ class ProgrammerCalculatorSection : public AbstractSection {
 public:
     explicit ProgrammerCalculatorSection(QWidget *parent = nullptr);
 
+    void restoreMemory(const QString& text);
+
+signals:
+    void memoryStoreBtnClicked(const QString& number);
+    void memoryRestoreBtnClicked();
+
 protected slots:
     void viewWindow() override;
     void closeWindow() override;

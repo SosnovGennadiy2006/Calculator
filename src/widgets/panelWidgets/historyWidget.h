@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QVector>
 #include <QSpacerItem>
+#include <QScrollArea>
 #include "../../widgets/panelWidgets/historyItem.h"
 #include "../../widgets/panelWidgets/abstractPanelWidget.h"
 
@@ -19,10 +20,10 @@ class HistoryWidget : public AbstractPanelWidget
     QVBoxLayout* mainLayout;
     QLabel* isEmptyHistoryLabel;
 
+    QScrollArea* mainArea;
+
     QWidget* itemsWidget;
     QVBoxLayout* itemsLayout;
-
-    QSpacerItem* spacer;
 
 public:
     explicit HistoryWidget(QWidget *parent = nullptr);
